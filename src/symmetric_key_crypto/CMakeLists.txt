@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(symmetric_key_crypto)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -10,6 +10,7 @@ project(symmetric_key_crypto)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -46,11 +47,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+   FILES
+   cipher_array.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -67,10 +67,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -116,6 +116,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 add_executable(node_alice src/Node_Alice.cpp)
@@ -124,13 +125,17 @@ add_executable(node_bob src/Node_Bob.cpp)
 add_executable(alternate_node_alice src/Alternate_Node_Alice.cpp)
 add_executable(alternate_node_bob src/Alternate_Node_Bob.cpp)
 
+add_executable(array_node_alice src/Array_Node_Alice.cpp)
+add_executable(array_node_bob src/Array_Node_Bob.cpp)
+
 target_link_libraries(node_alice ${catkin_LIBRARIES})
 target_link_libraries(node_bob ${catkin_LIBRARIES})
-
 
 target_link_libraries(alternate_node_alice ${catkin_LIBRARIES})
 target_link_libraries(alternate_node_bob ${catkin_LIBRARIES})
 
+target_link_libraries(array_node_alice ${catkin_LIBRARIES})
+target_link_libraries(array_node_bob ${catkin_LIBRARIES})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
