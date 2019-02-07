@@ -115,9 +115,15 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
   ${catkin_INCLUDE_DIRS}
 )
+
+add_executable(node_alice src/Node_Alice.cpp)
+add_executable(node_bob src/Node_Bob.cpp)
+
+target_link_libraries(node_alice ${catkin_LIBRARIES})
+target_link_libraries(node_bob ${catkin_LIBRARIES})
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
