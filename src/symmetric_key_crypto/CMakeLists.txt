@@ -121,8 +121,15 @@ include_directories(
 add_executable(node_alice src/Node_Alice.cpp)
 add_executable(node_bob src/Node_Bob.cpp)
 
+add_executable(alternate_node_alice src/Alternate_Node_Alice.cpp)
+add_executable(alternate_node_bob src/Alternate_Node_Bob.cpp)
+
 target_link_libraries(node_alice ${catkin_LIBRARIES})
 target_link_libraries(node_bob ${catkin_LIBRARIES})
+
+
+target_link_libraries(alternate_node_alice ${catkin_LIBRARIES})
+target_link_libraries(alternate_node_bob ${catkin_LIBRARIES})
 
 
 ## Declare a C++ library
