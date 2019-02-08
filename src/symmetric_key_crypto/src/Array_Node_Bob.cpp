@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "symmetric_key_crypto/cipher_array.h"
 #include "symmetric_key_crypto/VectorHandler.h"
+#include "symmetric_key_crypto/Matrix.hpp"
 
 class PubSubHandler
 {
@@ -14,9 +15,11 @@ class PubSubHandler
   {
     ROS_INFO("Alice -> Bob: %s", VectorToString(_message -> cipherArray).c_str());
     std::vector<int32_t> _vector = _message -> cipherArray;
-    _vector.push_back(rand() % 10);
+    const algebra::Matrix<int> _matrix = algebra::VectorToMatrix(_vector,algebra::ContractionType::C_AlongRow,std::make_pair<size_t,size_t>(3,3));
+    const algebra::Matrix<int> _transposed = _matrix.Transpose();
+    const std::vector<int> _transformed_vector = algebra::MatrixToVector(_transposed,algebra::ExpansionType::E_AlongRow);
     symmetric_key_crypto::cipher_array _to_be_sent;
-    _to_be_sent.cipherArray = _vector;
+    _to_be_sent.cipherArray = _transformed_vector;
     m_Publisher.publish(_to_be_sent);
   }
 };

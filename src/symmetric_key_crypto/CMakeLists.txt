@@ -1,12 +1,25 @@
 cmake_minimum_required(VERSION 3.1...3.13)
 if(${CMAKE_VERSION} VERSION_LESS 3.13)
- cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+  cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
 project(symmetric_key_crypto VERSION 1.0 DESCRIPTION "A simple demonstration of symmetric key cryptography with the help of matrices" LANGUAGES CXX)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
+
+#include(FetchContent)
+
+#FetchContent_Declare (
+#  Francois
+#  GIT_REPOSITORY https://github.com/sarkarchandan/Francois.git
+#)
+
+#FetchContent_GetProperties(Francois)
+#if(NOT rancois_POPULATED)
+#  FetchContent_Populate(Francois)
+#  add_subdirectory(${Francois_SOURCE_DIR} ${Francois_BINARY_DIR})
+#endif()
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -140,6 +153,10 @@ target_link_libraries(alternate_node_bob ${catkin_LIBRARIES})
 
 target_link_libraries(array_node_alice ${catkin_LIBRARIES})
 target_link_libraries(array_node_bob ${catkin_LIBRARIES})
+
+#target_link_libraries(array_node_alice Francois)
+#target_link_libraries(array_node_bob Francois)
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

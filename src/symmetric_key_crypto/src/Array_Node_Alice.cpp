@@ -2,6 +2,7 @@
 #include "symmetric_key_crypto/cipher_array.h"
 #include <cstdlib>
 #include "symmetric_key_crypto/VectorHandler.h"
+#include "symmetric_key_crypto/Matrix.hpp"
 
 class PubSubHandler
 {
@@ -13,7 +14,13 @@ class PubSubHandler
   :m_Publisher(_publisher),m_Rate(_rate)
   {
     symmetric_key_crypto::cipher_array _message;
-    _message.cipherArray.push_back(rand() % 10);
+    const algebra::Matrix<int32_t> matrix1 = {
+      {1,2,3},
+      {4,5,6},
+      {7,8,9}
+    };
+    const std::vector<int32_t> _vector = algebra::MatrixToVector(matrix1,algebra::ExpansionType::E_AlongRow);
+    _message.cipherArray = _vector;
     m_Publisher.publish(_message);
   }
   
@@ -22,9 +29,11 @@ class PubSubHandler
     ROS_INFO("Bob -> Alice: %s",VectorToString(_message -> cipherArray).c_str());
     m_Rate.sleep();
     std::vector<int32_t> _vector = _message -> cipherArray;
-    _vector.push_back(rand() % 10);
+    const algebra::Matrix<int32_t> _matrix = algebra::VectorToMatrix(_vector,algebra::ContractionType::C_AlongRow,std::make_pair<size_t,size_t>(3,3));
+    const algebra::Matrix<int32_t> _transposed = _matrix.Transpose();
+    const std::vector<int32_t> _transformed_vector = algebra::MatrixToVector(_transposed,algebra::ExpansionType::E_AlongRow);
     symmetric_key_crypto::cipher_array _to_be_sent;
-    _to_be_sent.cipherArray = _vector;
+    _to_be_sent.cipherArray = _transformed_vector;
     m_Publisher.publish(_to_be_sent);
   }
 };
