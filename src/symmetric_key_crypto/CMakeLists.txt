@@ -1,5 +1,9 @@
-cmake_minimum_required(VERSION 2.8.3)
-project(symmetric_key_crypto)
+cmake_minimum_required(VERSION 3.1...3.13)
+if(${CMAKE_VERSION} VERSION_LESS 3.13)
+ cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+endif()
+
+project(symmetric_key_crypto VERSION 1.0 DESCRIPTION "A simple demonstration of symmetric key cryptography with the help of matrices" LANGUAGES CXX)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)

@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 {
   ros::init(argc,argv,"array_node_bob");
   ros::NodeHandle nodeHandle;
-  ros::Publisher publisher = nodeHandle.advertise<symmetric_key_crypto::cipher_array>("message_for_alice",1000);
+  ros::Publisher publisher = nodeHandle.advertise<symmetric_key_crypto::cipher_array>("message_for_alice",10,true);
   PubSubHandler pubsubHandler = publisher;
 
   ros::Subscriber subscriber = nodeHandle.subscribe("message_from_alice",1000,&PubSubHandler::MessageReceived,&pubsubHandler);
