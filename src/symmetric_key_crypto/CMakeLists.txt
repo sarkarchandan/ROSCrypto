@@ -16,9 +16,9 @@ add_compile_options(-std=c++14)
 #)
 
 #FetchContent_GetProperties(Francois)
-#if(NOT rancois_POPULATED)
+#if(NOT Francois_POPULATED)
 #  FetchContent_Populate(Francois)
-#  add_subdirectory(${Francois_SOURCE_DIR} ${Francois_BINARY_DIR})
+#  add_subdirectory(${francois_SOURCE_DIR} ${francois_BINARY_DIR})
 #endif()
 
 ## Find catkin macros and libraries

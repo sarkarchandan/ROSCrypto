@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-
-std::string VectorToString(const std::vector<int32_t>& _vector)
+template<typename T>
+std::string VectorToString(const std::vector<T>& _vector)
 {
   std::string _string = "{";
   for(size_t _index = 0; _index < _vector.size(); _index += 1)
