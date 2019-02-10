@@ -1,8 +1,8 @@
 #include "ros/ros.h"
 #include "symmetric_key_crypto/cipher_array.h"
-#include <cstdlib>
-#include "symmetric_key_crypto/VectorHandler.h"
-#include "symmetric_key_crypto/Matrix.hpp"
+#include "symmetric_key_crypto/Crypto.hpp"
+#include "symmetric_key_crypto/MessageArchive.hpp"
+#include "symmetric_key_crypto/TempKeyArchive.hpp"
 
 class PubSubHandler
 {
@@ -13,30 +13,40 @@ class PubSubHandler
   PubSubHandler(const ros::Publisher& _publisher,const ros::Rate _rate)
   :m_Publisher(_publisher),m_Rate(_rate)
   {
-    symmetric_key_crypto::cipher_array _message;
-    const algebra::Matrix<int32_t> matrix1 = {
-      {1,2,3},
-      {4,5,6},
-      {7,8,9}
-    };
-    const std::vector<int32_t> _vector = algebra::MatrixToVector(matrix1,algebra::ExpansionType::E_AlongRow);
-    _message.cipherArray = _vector;
-    m_Publisher.publish(_message);
+    symmetric_key_crypto::cipher_array message_for_bob;
+    message_for_bob.cipherArray = PrepareMessage();
+    m_Publisher.publish(message_for_bob);
   }
   
   void MessageReceived(const symmetric_key_crypto::cipher_array::ConstPtr& _message)
   {
-    ROS_INFO("Bob -> Alice: %s",VectorToString(_message -> cipherArray).c_str());
-    m_Rate.sleep();
-    std::vector<int32_t> _vector = _message -> cipherArray;
-    const algebra::Matrix<int32_t> _matrix = algebra::VectorToMatrix(_vector,algebra::ContractionType::C_AlongRow,std::make_pair<size_t,size_t>(3,3));
-    const algebra::Matrix<int32_t> _transposed = _matrix.Transpose();
-    const std::vector<int32_t> _transformed_vector = algebra::MatrixToVector(_transposed,algebra::ExpansionType::E_AlongRow);
-    symmetric_key_crypto::cipher_array _to_be_sent;
-    _to_be_sent.cipherArray = _transformed_vector;
-    m_Publisher.publish(_to_be_sent);
+    ProcessMessage(_message);
+    symmetric_key_crypto::cipher_array message_for_bob;
+    message_for_bob.cipherArray = PrepareMessage();
+    m_Publisher.publish(message_for_bob);
   }
+
+  private:
+  void ProcessMessage(const symmetric_key_crypto::cipher_array::ConstPtr& _message)
+  {
+    //ROS_INFO("Bob -> Alice [Encrypted]: [%s]",VectorToString(_message -> cipherArray).c_str());
+    m_Rate.sleep();
+    const std::vector<int32_t> cipher_vector = _message -> cipherArray;
+    const algebra::Matrix<int32_t> decryption_key = algebra::Invert(ProvideKey());
+    const std::string decrypted_message = Decrypt(cipher_vector,decryption_key);
+    ROS_INFO("Bob -> Alice [Decrypted]: %s",decrypted_message.c_str());
+  }
+
+  std::vector<int32_t> PrepareMessage()
+  {
+    const std::string random_message = RandomMessage('A');
+    const algebra::Matrix<int32_t> encryption_key = ProvideKey();
+    const std::vector<int32_t> cipher_vector = Encrypt(random_message,encryption_key);
+    return cipher_vector;
+  }
+  
 };
+
 
 int main(int argc, char **argv)
 {

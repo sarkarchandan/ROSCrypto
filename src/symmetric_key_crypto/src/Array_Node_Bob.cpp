@@ -1,7 +1,8 @@
 #include "ros/ros.h"
 #include "symmetric_key_crypto/cipher_array.h"
-#include "symmetric_key_crypto/VectorHandler.h"
-#include "symmetric_key_crypto/Matrix.hpp"
+#include "symmetric_key_crypto/Crypto.hpp"
+#include "symmetric_key_crypto/MessageArchive.hpp"
+#include "symmetric_key_crypto/TempKeyArchive.hpp"
 
 class PubSubHandler
 {
@@ -13,15 +14,30 @@ class PubSubHandler
   
   void MessageReceived(const symmetric_key_crypto::cipher_array::ConstPtr& _message)
   {
-    ROS_INFO("Alice -> Bob: %s", VectorToString(_message -> cipherArray).c_str());
-    std::vector<int32_t> _vector = _message -> cipherArray;
-    const algebra::Matrix<int> _matrix = algebra::VectorToMatrix(_vector,algebra::ContractionType::C_AlongRow,std::make_pair<size_t,size_t>(3,3));
-    const algebra::Matrix<int> _transposed = _matrix.Transpose();
-    const std::vector<int> _transformed_vector = algebra::MatrixToVector(_transposed,algebra::ExpansionType::E_AlongRow);
-    symmetric_key_crypto::cipher_array _to_be_sent;
-    _to_be_sent.cipherArray = _transformed_vector;
-    m_Publisher.publish(_to_be_sent);
+    ProcessMessage(_message);
+    symmetric_key_crypto::cipher_array message_for_bob;
+    message_for_bob.cipherArray = PrepareMessage();
+    m_Publisher.publish(message_for_bob);
   }
+
+  private:
+  void ProcessMessage(const symmetric_key_crypto::cipher_array::ConstPtr& _message)
+  {
+    //ROS_INFO("Bob -> Alice [Encrypted]: [%s]",VectorToString(_message -> cipherArray).c_sti());
+    const std::vector<int32_t> cipher_vector = _message -> cipherArray;
+    const algebra::Matrix<int32_t> decryption_key = algebra::Invert(ProvideKey());
+    const std::string decrypted_message = Decrypt(cipher_vector,decryption_key);
+    ROS_INFO("Alice -> Bob [Decrypted]: %s",decrypted_message.c_str());
+  }
+
+  std::vector<int32_t> PrepareMessage()
+  {
+    const std::string random_message = RandomMessage('B');
+    const algebra::Matrix<int32_t> encryption_key = ProvideKey();
+    const std::vector<int32_t> cipher_vector = Encrypt(random_message,encryption_key);
+    return cipher_vector;
+  }
+
 };
 
 int main(int argc, char **argv)
