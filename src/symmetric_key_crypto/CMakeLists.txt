@@ -70,11 +70,10 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+   FILES
+   key.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -121,7 +120,7 @@ add_message_files(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES symmetric_key_crypto
-#  CATKIN_DEPENDS roscpp std_msgs
+  CATKIN_DEPENDS roscpp std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -144,6 +143,7 @@ add_executable(alternate_node_bob src/Alternate_Node_Bob.cpp)
 
 add_executable(array_node_alice src/Array_Node_Alice.cpp)
 add_executable(array_node_bob src/Array_Node_Bob.cpp)
+add_executable(key_authority src/KeyAuthority.cpp)
 
 target_link_libraries(node_alice ${catkin_LIBRARIES})
 target_link_libraries(node_bob ${catkin_LIBRARIES})
@@ -153,6 +153,7 @@ target_link_libraries(alternate_node_bob ${catkin_LIBRARIES})
 
 target_link_libraries(array_node_alice ${catkin_LIBRARIES})
 target_link_libraries(array_node_bob ${catkin_LIBRARIES})
+target_link_libraries(key_authority ${catkin_LIBRARIES})
 
 #target_link_libraries(array_node_alice Francois)
 #target_link_libraries(array_node_bob Francois)

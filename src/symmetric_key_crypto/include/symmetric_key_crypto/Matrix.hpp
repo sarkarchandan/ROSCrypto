@@ -363,6 +363,14 @@ namespace algebra
     return algebra::Ints(_row,_column,1);
   }
 
+  Matrix<int> Identity(const size_t& _order)
+  {
+    algebra::Matrix<int> _zeroes = algebra::Zeros(_order,_order);
+    for(size_t _matrix_index = 0; _matrix_index < _order; _matrix_index += 1)
+      _zeroes(_matrix_index,_matrix_index) = 1;
+    return _zeroes;
+  }
+
   template <typename RealNumericValueType>
   Matrix<RealNumericValueType> FindAdjointMatrixFor(const algebra::Matrix<RealNumericValueType>& _matrix)
   {
