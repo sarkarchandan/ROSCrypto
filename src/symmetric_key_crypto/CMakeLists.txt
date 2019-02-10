@@ -72,7 +72,7 @@ add_message_files(
 ## Generate services in the 'srv' folder
 add_service_files(
    FILES
-   key.srv
+   key_generator.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -135,24 +135,24 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-add_executable(node_alice src/Node_Alice.cpp)
-add_executable(node_bob src/Node_Bob.cpp)
+#add_executable(node_alice src/Node_Alice.cpp)
+#add_executable(node_bob src/Node_Bob.cpp)
 
-add_executable(alternate_node_alice src/Alternate_Node_Alice.cpp)
-add_executable(alternate_node_bob src/Alternate_Node_Bob.cpp)
+#add_executable(alternate_node_alice src/Alternate_Node_Alice.cpp)
+#add_executable(alternate_node_bob src/Alternate_Node_Bob.cpp)
 
-add_executable(array_node_alice src/Array_Node_Alice.cpp)
-add_executable(array_node_bob src/Array_Node_Bob.cpp)
+add_executable(node_alice src/Array_Node_Alice.cpp)
+add_executable(node_bob src/Array_Node_Bob.cpp)
 add_executable(key_authority src/KeyAuthority.cpp)
+
+#target_link_libraries(node_alice ${catkin_LIBRARIES})
+#target_link_libraries(node_bob ${catkin_LIBRARIES})
+
+#target_link_libraries(alternate_node_alice ${catkin_LIBRARIES})
+#target_link_libraries(alternate_node_bob ${catkin_LIBRARIES})
 
 target_link_libraries(node_alice ${catkin_LIBRARIES})
 target_link_libraries(node_bob ${catkin_LIBRARIES})
-
-target_link_libraries(alternate_node_alice ${catkin_LIBRARIES})
-target_link_libraries(alternate_node_bob ${catkin_LIBRARIES})
-
-target_link_libraries(array_node_alice ${catkin_LIBRARIES})
-target_link_libraries(array_node_bob ${catkin_LIBRARIES})
 target_link_libraries(key_authority ${catkin_LIBRARIES})
 
 #target_link_libraries(array_node_alice Francois)

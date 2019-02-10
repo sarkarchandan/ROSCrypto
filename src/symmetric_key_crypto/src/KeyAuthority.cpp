@@ -1,5 +1,5 @@
 #include "ros/ros.h"
-#include "symmetric_key_crypto/key.h"
+#include "symmetric_key_crypto/key_generator.h"
 #include "symmetric_key_crypto/Matrix.hpp"
 #include <unordered_map>
 #include <string>
@@ -16,10 +16,10 @@ algebra::Matrix<int32_t> KeyGen()
 std::unordered_map<std::string,std::vector<int32_t>> crypto_registry;
 const std::string kNodeAlice = "kNodeAlice";
 const std::string kNodeBob = "kNodeBob";
-const std::string nodeNameAlice = "node_alice";
-const std::string nodeNameBob = "node_bob";
+const std::string nodeNameAlice = "/node_alice";
+const std::string nodeNameBob = "/node_bob";
 
-bool ServiceCalled(symmetric_key_crypto::key::Request& _request,symmetric_key_crypto::key::Response& _response)
+bool ServiceCalled(symmetric_key_crypto::key_generator::Request& _request,symmetric_key_crypto::key_generator::Response& _response)
 {
   if(_request.node_id == nodeNameAlice)
   {
@@ -46,9 +46,9 @@ int main(int argc, char **argv)
     crypto_registry[kNodeAlice] = _encryption_vector;
     crypto_registry[kNodeBob] = _decryption_vector;
   }
-  ros::init(argc,argv,"key_authority");
+  ros::init(argc,argv,"key_generator");
   ros::NodeHandle nodeHandle;
-  ros::ServiceServer server = nodeHandle.advertiseService("keygen",ServiceCalled);
+  ros::ServiceServer server = nodeHandle.advertiseService("generate_key",ServiceCalled);
   ros::spin();
   return EXIT_SUCCESS;
 }
