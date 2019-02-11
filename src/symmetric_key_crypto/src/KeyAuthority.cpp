@@ -21,6 +21,7 @@ const std::string nodeNameBob = "/node_bob";
 
 bool ServiceCalled(symmetric_key_crypto::key_generator::Request& _request,symmetric_key_crypto::key_generator::Response& _response)
 {
+  ROS_INFO("Key Authority is consulted by: [%s]",_request.node_id.c_str());
   if(_request.node_id == nodeNameAlice)
   {
     _response.key = crypto_registry[kNodeAlice];
@@ -49,6 +50,7 @@ int main(int argc, char **argv)
   ros::init(argc,argv,"key_generator");
   ros::NodeHandle nodeHandle;
   ros::ServiceServer server = nodeHandle.advertiseService("generate_key",ServiceCalled);
+  ROS_INFO("Key Authority stand by...");
   ros::spin();
   return EXIT_SUCCESS;
 }

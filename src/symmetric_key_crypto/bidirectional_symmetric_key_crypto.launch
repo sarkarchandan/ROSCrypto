@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<launch>
-	<node name="alternate_node_bob" pkg="symmetric_key_crypto" type="alternate_node_bob" output="screen"/>
-        <node name="alternate_node_alice" pkg="symmetric_key_crypto" type="alternate_node_alice" output="screen"/>
-</launch>

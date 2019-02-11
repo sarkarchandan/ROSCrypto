@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<node name="key_authority" pkg="symmetric_key_crypto" type="key_authority" output="screen"/>
+</launch>
+
