@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "symmetric_key_crypto/key_generator.h"
-#include "symmetric_key_crypto/Matrix.hpp"
+#include "ros_crypto/key_generator.h"
+#include "ros_crypto/Matrix.hpp"
 #include <unordered_map>
 #include <string>
 
@@ -19,7 +19,7 @@ const std::string kNodeBob = "kNodeBob";
 const std::string nodeNameAlice = "/node_alice";
 const std::string nodeNameBob = "/node_bob";
 
-bool ServiceCalled(symmetric_key_crypto::key_generator::Request& _request,symmetric_key_crypto::key_generator::Response& _response)
+bool ServiceCalled(ros_crypto::key_generator::Request& _request,ros_crypto::key_generator::Response& _response)
 {
   ROS_INFO("Key Authority is consulted by: [%s]",_request.node_id.c_str());
   if(_request.node_id == nodeNameAlice)

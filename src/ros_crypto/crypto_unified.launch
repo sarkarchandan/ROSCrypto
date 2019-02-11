@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<node name="key_authority" pkg="ros_crypto" type="key_authority" output="screen" required="true"/>
+	<node name="node_bob" pkg="ros_crypto" type="node_bob" output="screen" respawn="true" respawn_delay="1"/>
+	<node name="node_alice" pkg="ros_crypto" type="node_alice" output="screen" respawn="true" respawn_delay="1"/>
+</launch>
+

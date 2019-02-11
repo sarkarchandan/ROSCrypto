@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<launch>
-	<node name="node_bob" pkg="symmetric_key_crypto" type="node_bob" output="screen" required="true"/>
-	<node name="node_alice" pkg="symmetric_key_crypto" type="node_alice" output="screen" required="true"/>
-</launch>
