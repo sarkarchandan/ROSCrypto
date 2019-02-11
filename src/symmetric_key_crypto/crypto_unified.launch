@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 	<node name="key_authority" pkg="symmetric_key_crypto" type="key_authority" output="screen" required="true"/>
-	<node name="node_bob" pkg="symmetric_key_crypto" type="node_bob" output="screen" respawn="true" respawn_delay="5"/>
-	<node name="node_alice" pkg="symmetric_key_crypto" type="node_alice" output="screen" respawn="true" respawn_delay="5"/>
+	<node name="node_bob" pkg="symmetric_key_crypto" type="node_bob" output="screen" respawn="true" respawn_delay="1"/>
+	<node name="node_alice" pkg="symmetric_key_crypto" type="node_alice" output="screen" respawn="true" respawn_delay="1"/>
 </launch>
 
