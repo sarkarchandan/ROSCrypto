@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <string>
 
-algebra::Matrix<int32_t> KeyGen()
+algebra::Matrix<int32_t> GenerateKey()
 {
   std::time_t _time;
   std::srand((unsigned) std::time(&_time));
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 {
   if(crypto_registry.find(kNodeAlice) == crypto_registry.end() || crypto_registry.find(kNodeBob) == crypto_registry.end())
   {
-    const algebra::Matrix<int32_t> _encryption_key = KeyGen();
+    const algebra::Matrix<int32_t> _encryption_key = GenerateKey();
     const std::vector<int32_t> _encryption_vector = algebra::MatrixToVector(_encryption_key,algebra::ExpansionType::E_AlongColumn);
     const algebra::Matrix<int32_t> _decryption_key = algebra::Invert(_encryption_key);
     const std::vector<int32_t> _decryption_vector = algebra::MatrixToVector(_decryption_key,algebra::ExpansionType::E_AlongColumn);

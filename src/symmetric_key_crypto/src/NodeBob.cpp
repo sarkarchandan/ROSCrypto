@@ -26,7 +26,7 @@ class CryptoPubSubHandler
   private:
   void ProcessMessage(const symmetric_key_crypto::cipher_array::ConstPtr& _message)
   {
-    //ROS_INFO("Bob -> Alice [Encrypted]: [%s]",VectorToString(_message -> cipherArray).c_sti());
+    ROS_DEBUG("Bob -> Alice [Encrypted]: [%s]",VectorToString(_message -> cipherArray).c_str());
     const std::vector<int32_t> cipher_vector = _message -> cipherArray;
     const algebra::Matrix<int32_t> decryption_key = m_Key;
     const std::string decrypted_message = Decrypt(cipher_vector,decryption_key);
@@ -35,12 +35,11 @@ class CryptoPubSubHandler
 
   std::vector<int32_t> PrepareMessage()
   {
-    const std::string random_message = RandomMessage('B');
-    const algebra::Matrix<int32_t> encryption_key = ProvideKey();
-    const std::vector<int32_t> cipher_vector = Encrypt(random_message,m_Key);
-    return cipher_vector;
+    const std::string _random_message = RandomMessage('B');
+    const std::vector<int32_t> _cipher_vector = Encrypt(_random_message,m_Key);
+    ROS_DEBUG("Bob -> Alice [Encrypted]: [%s]",VectorToString(_cipher_vector).c_str());
+    return _cipher_vector;
   }
-
 };
 
 int main(int argc, char **argv)
