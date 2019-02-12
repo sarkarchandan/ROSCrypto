@@ -14,7 +14,12 @@
 ##### Node _key\_authority_ implements a ROS [_Service_](http://wiki.ros.org/Services "ROS building block to support the remote procedure call paradigm") which is responsible for generating a pair of compatible unique keys for a given peer to peer communication session between _node\_alice_ and _node\_bob_. It then distributes the keys between the two nodes on demand. The key generation is a simple procedure of constructing an elementary matrix of order 3x3 for each communication session, using the elementary operations and utility methods implemented in _Francois_. KeyAuthority leverages the invertibility property of the elementary matrices. Thus elementary matrix and its inverse constitute the encryption key and decryption key respectively or vice versa. These keys are in turn distributed between the _node\_alice_ and _node\_bob_ over service call.
 
 ```cpp
-//Creates an elementary matrix of order 3x3 to be used to generate encryption and decryption keys 
+/*
+* An elementary matrix could be generated from an identity matrix with one
+* elementary row operation. All elementary matrices are invertible.
+* Function creates an elementary matrix of order 3x3 to be used to generate 
+* encryption and decryption keys.
+*/
 algebra::Matrix<int32_t> GenerateKey()
 {
   std::time_t _time;
@@ -104,16 +109,52 @@ const char lowercaseBuffer[] = {'a','b','c','d','e','f','g','h','i','j','k','l',
 
 ## Installation
 
-##### 
-
+##### Having a suitable ROS distribution installed, following simple steps could be carried in order to have this project up and running in the Linux environment. This project is created with ROS Melodic distribution on Ubuntu 18.04. 
 
 ```bash
+# Clone or download the project
+$ git clone https://github.com/sarkarchandan/ROSCrypto.git
+$ cd ROSCrypto
 
+# Build the ros_crypto package with catkin
+$ catkin_make
 
+# Need to point out the current workspace to ROS
+# If bash shell
+$ source devel/setup.bash
+
+# If Bourne shell
+$ sh devel/setup.sh
+
+# If Z shell
+$ zsh devel/setup.zsh
+
+# The nodes could be executed individually using rosrun command, having a roscore running in a separate terminal window. 
+# Three launch files are created to quickly spin up the nodes without the hassle of running a roscore manually.
+
+# Separate terminal window approach.
+# Terminal I:
+$ roslaunch ros_crypto crypto_generation.launch
+
+# crypto_generation launch file encapsulates launch configuration for the service node key_authority only. 
+# It is essential that key_authority is executed first before the other two nodes.
+
+# Terminal II:
+$ roslaunch ros_crypto crypto_communication.launch
+
+# Single terminal window approach
+$ roslaunch ros_crypto crypto_unified.launch
+
+# crypto_ unified launch file encapsulates the launch configuration for all the three nodes together. 
+# In certain execution scenarios, it is possible that node_alice and/or node_bob may die during their first initialization due to the unreadiness of the key_authority service node. 
+# Therefore, respawn and respawn_delay attributes of these nodes are configured to ensure their automatic respawn when the service becomes available.
+
+# However, if the key_authority service node cannot spin up for some reason, the launch should fail. 
+# The required attribute is configured for the key_authority node in order to ensure this behavior.
 
 ```
 
-## Examples
+## Samples
 
 ##### 
 
