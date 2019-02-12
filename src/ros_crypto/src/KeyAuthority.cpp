@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "ros_crypto/key_generator.h"
-#include "ros_crypto/Matrix.hpp"
+#include "Matrix.hpp"
 #include <unordered_map>
 #include <string>
 
