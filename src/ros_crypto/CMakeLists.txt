@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1...3.13)
+cmake_minimum_required(VERSION 3.11...3.13)
 if(${CMAKE_VERSION} VERSION_LESS 3.13)
   cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
@@ -6,18 +6,18 @@ endif()
 project(ros_crypto VERSION 1.0 DESCRIPTION "A simple demonstration of cryptography with the help of matrices" LANGUAGES CXX)
 add_compile_options(-std=c++14)
 
-#include(FetchContent)
+include(FetchContent)
 
-#FetchContent_Declare (
-#  Francois
-#  GIT_REPOSITORY https://github.com/sarkarchandan/Francois.git
-#)
+FetchContent_Declare (
+  Francois
+  GIT_REPOSITORY https://github.com/sarkarchandan/Francois.git
+)
 
-#FetchContent_GetProperties(Francois)
-#if(NOT Francois_POPULATED)
-#  FetchContent_Populate(Francois)
-#  add_subdirectory(${francois_SOURCE_DIR} ${francois_BINARY_DIR})
-#endif()
+FetchContent_GetProperties(Francois)
+if(NOT Francois_POPULATED)
+  FetchContent_Populate(Francois)
+  add_subdirectory(${francois_SOURCE_DIR} ${francois_BINARY_DIR})
+endif()
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -134,6 +134,7 @@ target_link_libraries(key_authority ${catkin_LIBRARIES})
 target_link_libraries(node_alice ${catkin_LIBRARIES})
 target_link_libraries(node_bob ${catkin_LIBRARIES})
 
-#target_link_libraries(array_node_alice Francois)
-#target_link_libraries(array_node_bob Francois)
+target_link_libraries(key_authority Francois)
+target_link_libraries(node_alice Francois)
+target_link_libraries(node_bob Francois)
 
