@@ -126,6 +126,10 @@ add_executable(key_authority src/KeyAuthority.cpp)
 add_executable(node_alice src/NodeAlice.cpp)
 add_executable(node_bob src/NodeBob.cpp)
 
+add_dependencies(key_authority ros_crypto_generate_messages_cpp)
+add_dependencies(node_alice ros_crypto_generate_messages_cpp)
+add_dependencies(node_bob ros_crypto_generate_messages_cpp)
+
 target_link_libraries(key_authority ${catkin_LIBRARIES})
 target_link_libraries(node_alice ${catkin_LIBRARIES})
 target_link_libraries(node_bob ${catkin_LIBRARIES})
