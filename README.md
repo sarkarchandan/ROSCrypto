@@ -76,7 +76,6 @@ std::vector<int32_t> Encrypt(const std::string& _message, const algebra::Matrix<
 * Uppercase and lowercase character buffers are used to replace the 
 * characters in the plaintext string.
 */
-
 std::string Decrypt(const std::vector<int32_t>& _cipher_vector, const algebra::Matrix<int32_t>& _decryption_key)
 {
   const char uppercaseBuffer[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',' ',',','.'};
