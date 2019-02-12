@@ -167,7 +167,7 @@ $ roslaunch ros_crypto crypto_unified.launch
 * C++14
 * ROS distribution supporting package format 2 
 
-##### The project uses CMake [FetchContent](https://cmake.org/cmake/help/v3.11/module/FetchContent.html#id1 "CMake - FetchContent Module") module in order to integrate the library Francois into the underlying package. FetchContent is introduced with CMake version 3.11. The library Francois uses features from C++ standard 14 in several places. The package uses format 2 in the package.xml file.
+##### The project uses CMake [FetchContent](https://cmake.org/cmake/help/v3.11/module/FetchContent.html#id1 "CMake - FetchContent Module") module in order to integrate the library Francois into the underlying package. FetchContent is introduced with CMake version 3.11. The library Francois uses features from C++ standard 14 in several places. The package uses package format 2 in the package.xml file.
 
 ## Authors
 
