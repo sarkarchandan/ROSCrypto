@@ -1,10 +1,10 @@
 # ROSCrypto
 
-#### This is a C++ prototypical implementation for a simple example of cryptography built using some of the basic building blocks of [ROS](http://www.ros.org "Robot Operating System"). The encryption and decryption methods are adopted from a simplified version of [Hill cipher](https://en.wikipedia.org/wiki/Hill_cipher "A polygraphic substitution cipher"). 
+#### This is a C++ prototypical implementation for a simple example of cryptography built using some of the basic building blocks of [ROS](http://www.ros.org "Robot Operating System"). The encryption and decryption methods are adopted from a simplified version of [Hill cipher](https://en.wikipedia.org/wiki/Hill_cipher "A polygraphic substitution cipher").
 
-#### In the sender node, a plain text message is transformed into an std::vector\<int32_t> with the help of ASCII value of each character. Some of the punctuation symbols are ignored for the sake of simplicity. A matrix of order 3xn is constructed from the vector such that each consecutive set of three numbers became a column vector in the matrix. A chosen encryption key matrix of order 3x3 is then multiplied with the generated 3xn matrix in order to derive the cipher matrix. The sender node publishes the cipher in a flattened serialized form using a custom ROS message. 
+#### In the sender node, a plain text message is transformed into an std::vector\<int32_t> with the help of ASCII value of each character. Some of the punctuation symbols are ignored for the sake of simplicity. A matrix of order 3xn is constructed from the vector such that each consecutive set of three numbers became a column vector in the matrix. A chosen encryption key matrix of order 3x3 is then multiplied with the generated 3xn matrix in order to derive the cipher matrix. The sender node publishes the cipher in a flattened serialized form with pre-agreed ROS [Topic](http://wiki.ros.org/Topics "Topics are named buses over which nodes exchange messages").
 
-#### The receiver node receives the cipher upon subscribing to the specific ROS message and reconstructs a 3xn matrix from the flattened cipher. A compatible decryption key matrix of order 3x3 is then multiplied with the cipher matrix in order to recover the matrix representing the plaintext message in numeric form, which is finally transformed into the original plaintext message.
+#### The receiver node receives the cipher upon subscribing to the specific ROS topic and reconstructs a 3xn matrix from the flattened cipher. A compatible decryption key matrix of order 3x3 is then multiplied with the cipher matrix in order to recover the matrix representing the plaintext message in numeric form, which is finally transformed into the original plaintext message.
 
 
 #### The library [Francois](https://github.com/sarkarchandan/Francois "This is a library written in C++, using STL containers and algorithms in order to provide implementations for some of the core structures of the linear algebra") is used to perform all the associated matrix operations. This implementation features three _ROS_ [_Nodes_](http://wiki.ros.org/Nodes "The fundamental building block of computation in ROS").
@@ -43,7 +43,7 @@ algebra::Matrix<int32_t> GenerateKey()
 * Encrypts an std::string plaintext into an std::vector<int32_t> cipher using
 * algebra::Matrix<int32_t> key.
 * size_t NumberOfPlaceHolderNeeded(const size_t&) computes the number of
-* placeholder digits needed to add in the vector which so that an 
+* placeholder digits needed to add in the vector so that an 
 * algebra::Matrix<int32_t> of order 3xn could be constructed.
 * int32_t DeriveCodeForCharacter(const char& ) derives the appropriate int32_t
 * digit from the passed in character using ASCII values.
@@ -99,17 +99,17 @@ const char lowercaseBuffer[] = {'a','b','c','d','e','f','g','h','i','j','k','l',
 
 ## ROS Graph
 
-##### The Graph representing this simple prototypical ROS system constitute two nodes namely, node\_alice and node\_bob connected with two directed edges, message\_from\_alice and message\_for\_alice respectively, as well as a disjoint service node key\_authority.
+##### The Graph representing this simple prototypical ROS system is constituted of three nodes namely, node\_alice and node\_bob connected with two directed edges, message\_from\_alice, and message\_for\_alice respectively, as well as a disjoint service node key\_authority.
 
-* **node_alice** publishes data of type std\_msgs/Int32[] with topic name **message\_from\_alice** and subscribes to **message\_for\_alice** with an expectation of data of type std\_msgs/Int32[].
-* **node_bob** publishes data of type std\_msgs/Int32[] with topic name **message\_for\_alice** and subscribes to **message\_from\_alice** with an expectation of data of type std\_msgs/Int32[].
+* **node_alice** publishes data of type std\_msgs/Int32[] with topic name **message\_from\_alice** and subscribes to topic name **message\_for\_alice** with an expectation of data of type std\_msgs/Int32[].
+* **node_bob** publishes data of type std\_msgs/Int32[] with topic name **message\_for\_alice** and subscribes to topic name **message\_from\_alice** with an expectation of data of type std\_msgs/Int32[].
 
 <img width="720" alt="crypto_rosgraph" src="https://user-images.githubusercontent.com/19269229/52596152-eb827400-2e4f-11e9-93ce-ddf95ec99221.png">
 
 
 ## Installation
 
-##### Having a suitable ROS distribution installed, following simple steps could be carried in order to have this project up and running in the Linux environment. This project is created with ROS Melodic distribution on Ubuntu 18.04. 
+##### Having a suitable ROS distribution installed, following simple steps could be carried out in order to have this project up and running in the Linux environment. This project is created with ROS Melodic distribution on Ubuntu 18.04. 
 
 ```bash
 # Clone or download the project
@@ -156,18 +156,25 @@ $ roslaunch ros_crypto crypto_unified.launch
 
 ## Samples
 
-##### 
+##### Upon spinning up the nodes, it is expected that ROS system starts service node key\_authority first to ensure the key generation for the session. Immediately after that node\_alice and node\_bob come into existence and request for their individual keys from key_authortiy. If the key_authority is not yet ready to handle the request, node\_alice and/or node\_bob can respawn and repeat their request.
+##### Upon obtaining their individual keys node\_alice and node\_bob start their peer to peer encrypted communication with each other. The following screen-captures demonstrate sample execution sessions, triggered with roslaunch command using the included launch configuration files.
 
-```bash
-$
-```
+<img width="1212" alt="screenshot 2019-02-12 at 20 01 34" src="https://user-images.githubusercontent.com/19269229/52663503-124fb180-2f07-11e9-9eb3-ea84f14efac5.png">
+<img width="1208" alt="screenshot 2019-02-12 at 20 04 36" src="https://user-images.githubusercontent.com/19269229/52663510-1976bf80-2f07-11e9-8a20-876d284a108b.png">
 
 ## Dependencies
 
+* CMake version 3.11
+* C++14
+* ROS distribution supporting package format 2 
+
+##### The project uses CMake [FetchContent](https://cmake.org/cmake/help/v3.11/module/FetchContent.html#id1 "CMake - FetchContent Module") module in order to integrate the library Francois into the underlying package. FetchContent is introduced with CMake version 3.11. The library Francois uses features from C++ standard 14 in several places. The package uses format 2 in the package.xml file.
+
 ## Authors
 
+* Chandan Sarkar
 
-##### 
+##### I am a grad student in computer science and learning C++ and ROS programming. This project is created as part of my educational endeavors. I welcome all feedback and suggestions to improve my work.
 
 ## License
 ##### This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
