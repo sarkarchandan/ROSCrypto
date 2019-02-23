@@ -1,0 +1,38 @@
+version: '3'
+services: 
+  core:
+    image: ros:melodic-ros-core
+    container_name: core
+    command:
+      - roscore
+  node_keyauthority:
+    restart: always
+    build: ./node_keyauthority
+    depends_on: 
+      - core
+    container_name: node_keyauthority
+    environment: 
+      - "ROS_HOSTNAME=node_keyauthority"
+      - "ROS_MASTER_URI=http://core:11311"
+    command: rosrun node_keyauthority key_authority
+  node_alice:
+    restart: always
+    build: ./node_alice
+    depends_on: 
+      - node_keyauthority
+    container_name: node_alice
+    environment: 
+      - "ROS_HOSTNAME=node_alice"
+      - "ROS_MASTER_URI=http://core:11311"
+    command: rosrun node_alice node_alice
+  node_bob:
+    restart: always
+    build: ./node_bob
+    depends_on: 
+      - node_keyauthority
+    container_name: node_bob
+    environment: 
+      - "ROS_HOSTNAME=node_bob"
+      - "ROS_MASTER_URI=http://core:11311"
+    command: rosrun node_bob node_bob
+  
