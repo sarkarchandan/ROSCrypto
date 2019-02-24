@@ -1,6 +1,8 @@
 # ROSCrypto
 
-#### This is a C++ prototypical implementation for a simple example of cryptography, built using some of the basic building blocks of [ROS](http://www.ros.org "Robot Operating System"). The encryption and decryption methods are adopted from a simplified version of [Hill cipher](https://en.wikipedia.org/wiki/Hill_cipher "A polygraphic substitution cipher").
+#### This is a C++ prototypical implementation for a simple example of cryptography, built using some of the basic building blocks of [ROS](http://www.ros.org "Robot Operating System"). The encryption and decryption methods are adopted from a simplified version of [Hill cipher](https://en.wikipedia.org/wiki/Hill_cipher "A polygraphic substitution cipher"). In addition to the native ROS implementation, a separate Docker implementation is also created for the project which, uses the [Docker images for the ROS](https://hub.docker.com/_/ros "Docker images for the ROS") Melodic Morenia.
+
+
 
 #### In the sender node, a plain text message is transformed into an std::vector\<int32_t> with the help of ASCII value of each character. Some of the punctuation symbols are ignored for the sake of simplicity. A matrix of order 3xn is constructed from the vector such that each consecutive set of three numbers becomes a column vector in the matrix. A chosen encryption key matrix of order 3x3 is then multiplied with the generated 3xn matrix in order to derive the cipher matrix. The sender node publishes the cipher in a flattened serialized form with a pre-agreed ROS [Topic](http://wiki.ros.org/Topics "Topics are named buses over which nodes exchange messages").
 
@@ -153,6 +155,16 @@ $ roslaunch ros_crypto crypto_unified.launch
 
 ```
 
+##### If the Docker and Docker Compose utility are installed, a separate Docker implementation put inside the directory _DockerCrypto_ can be executed with following simple steps in any suitable environment, capable to run Docker.
+
+```bash
+# Clone or download the project
+$ git clone https://github.com/sarkarchandan/ROSCrypto.git
+$ cd ROSCrypto/DockerCrypto
+$ docker-compose up
+# This should take a longer time to build when executed for the first time since Docker would download the necessary layers in the system if not present already.
+```
+
 ## Samples
 
 ##### Upon spinning up the nodes, it is expected that ROS system starts service node key\_authority first to ensure the key generation for the session. Immediately after that, node\_alice and node\_bob come into existence and request for their individual keys from key\_authortiy. If the key_authority is not yet ready to handle the request, node\_alice and/or node\_bob can respawn and repeat their request.
@@ -166,6 +178,7 @@ $ roslaunch ros_crypto crypto_unified.launch
 * CMake version 3.11
 * C++14
 * ROS Indigo and above supporting package format 2
+* Docker and Docker Compose (only required for the optional Docker implementation)
 
 ##### The project uses CMake [FetchContent](https://cmake.org/cmake/help/v3.11/module/FetchContent.html#id1 "CMake - FetchContent Module") module in order to integrate the library Francois into the underlying package. FetchContent is introduced with CMake version 3.11. The library Francois uses features from C++ standard 14 in several places. The package uses package format 2 in the package.xml file. The node attribute respawn\_delay is used in the launch configuration files which, was introduced in ROS Indigo.
 
